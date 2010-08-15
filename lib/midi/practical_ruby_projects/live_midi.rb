@@ -62,21 +62,22 @@ LOG_PLAYBACK
         end
 
         def open
-          client_name = CoreFoundation.cFStringCreateWithCString(nil, "RubyMIDI", 0)
-          @client = DL::PtrData.new(nil)
-          CoreMIDI.mIDIClientCreate(client_name, nil, nil, @client.ref)
+          client_name = CoreFoundation.CFStringCreateWithCString(nil, "RubyMIDI", 0)
+          @client = DL::CPtr.new(0)
 
-          port_name = CoreFoundation.cFStringCreateWithCString(nil, "Output", 0)
-          @outport = DL::PtrData.new(nil)
-          CoreMIDI.mIDIOutputPortCreate(@client, port_name, @outport.ref)
+          CoreMIDI.MIDIClientCreate(client_name, nil, nil, @client.ref)
 
-          number_of_destinations = CoreMIDI.mIDIGetNumberOfDestinations()
+          port_name = CoreFoundation.CFStringCreateWithCString(nil, "Output", 0)
+          @outport = DL::CPtr.new(0)
+          CoreMIDI.MIDIOutputPortCreate(@client, port_name, @outport.ref)
+
+          number_of_destinations = CoreMIDI.MIDIGetNumberOfDestinations()
           raise NoMIDIDestinations if number_of_destinations < 1
-          @destination = CoreMIDI.mIDIGetDestination(@midi_destination)
+          @destination = CoreMIDI.MIDIGetDestination(@midi_destination)
         end
 
         def close
-          CoreMIDI.mIDIClientDispose(@client)
+          CoreMIDI.MIDIClientDispose(@client)
         end
         
         def clear

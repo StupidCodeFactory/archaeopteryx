@@ -1,6 +1,6 @@
 module CoreMIDI
   require 'dl/import'
-  extend DL::Importable
+  extend DL::Importer
   dlload '/System/Library/Frameworks/CoreMIDI.framework/Versions/Current/CoreMIDI'
 
   extern "int MIDIClientCreate(void *, void *, void *, void *)"
