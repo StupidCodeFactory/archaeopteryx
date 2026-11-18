@@ -23,7 +23,14 @@ module RCoreMidi
 
   class Entity < MIDIObject; end
   class Source < MIDIObject; end
-  class Destination < MIDIObject; end
+  class Destination < MIDIObject
+    attr_reader :name
+
+    # The real gem searches Device.all; there are no devices here.
+    def self.named(name)
+      raise ArgumentError, "No MIDI destination named \"#{name}\""
+    end
+  end
 
   class Client
     TICKS_PER_QUARTER = 24
