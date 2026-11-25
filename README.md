@@ -43,7 +43,7 @@ bundle exec rake spec
 
 ```bash
 arcx new my_set        # app skeleton; MIDI in/out default to IAC Driver Bus 1
-cd my_set
+cd my_set && bundle install
 arcx connections       # list MIDI inputs and outputs with their unique IDs
 arcx generate clip drum
 arcx start             # wait for the clock (add -d to run in the background)
