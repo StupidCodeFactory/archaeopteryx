@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe RCoreMidi::Instrument do
+RSpec.describe Archaeopteryx::Instrument do
 
   subject do
     described_class.new(:instrument_name, 0) do
@@ -9,7 +9,7 @@ RSpec.describe RCoreMidi::Instrument do
   end
 
   before do
-    RCoreMidi::Clip.register(:drum) do
+    Archaeopteryx::Clip.register(:drum) do
       note 'E5', 16, [1, 0, 0, 0] * 4
     end
   end
@@ -17,8 +17,8 @@ RSpec.describe RCoreMidi::Instrument do
   it_behaves_like 'registrable', [:instrument_name, :midi_channel]
 
   let(:bar)    { 1 }
-  let(:clip)   { instance_double(RCoreMidi::Clip, add_observer: nil) }
-  let(:track)  { instance_double(RCoreMidi::Track) }
+  let(:clip)   { instance_double(Archaeopteryx::Clip, add_observer: nil) }
+  let(:track)  { instance_double(Archaeopteryx::Track) }
 
   describe 'playing a bar range' do
     subject do
@@ -33,7 +33,7 @@ RSpec.describe RCoreMidi::Instrument do
 
     it 'picks up a clip file reloaded after it started playing it' do
       subject
-      RCoreMidi::Clip.register(:drum) { note 'G5', 16, [1] }
+      Archaeopteryx::Clip.register(:drum) { note 'G5', 16, [1] }
 
       expect(subject.generate_bar(1).map { |note| note.on[1] }).to eq([79])
     end
@@ -42,7 +42,7 @@ RSpec.describe RCoreMidi::Instrument do
   describe 'public API' do
     before do
       allow(subject).to receive(:track).and_return(track)
-      allow(RCoreMidi::Clip).to receive(:[]).with(:drum).and_return(clip)
+      allow(Archaeopteryx::Clip).to receive(:[]).with(:drum).and_return(clip)
     end
 
     describe '#play'  do

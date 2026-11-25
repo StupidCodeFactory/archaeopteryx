@@ -1,16 +1,17 @@
-require 'rcoremidi/cli'
-module RCoreMidi
+require 'pathname'
+require 'archaeopteryx/cli'
+module Archaeopteryx
   class AppPathname < Pathname
     def valid?
       true
     end
 
     def connections_file
-      config_dir.join(RCoreMidi::Commands::New::CONNECTIONS)
+      config_dir.join(Archaeopteryx::Commands::New::CONNECTIONS)
     end
 
     def log_file
-      join(RCoreMidi::CLI::LOG_DIR).join('arcx.log')
+      join(Archaeopteryx::CLI::LOG_DIR).join('arcx.log')
     end
 
     def instrument_files
@@ -39,11 +40,11 @@ module RCoreMidi
     end
 
     def clips_dir
-      join(RCoreMidi::CLI::CLIPS_DIR)
+      join(Archaeopteryx::CLI::CLIPS_DIR)
     end
 
     def instruments_dir
-      join(RCoreMidi::CLI::INSTRUMENTS_DIR)
+      join(Archaeopteryx::CLI::INSTRUMENTS_DIR)
     end
   end
 end

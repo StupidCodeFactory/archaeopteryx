@@ -1,9 +1,9 @@
 require 'spec_helper'
-require 'rcoremidi/cli'
+require 'archaeopteryx/cli'
 require 'tmpdir'
 
-RSpec.describe RCoreMidi::Application do
-  let(:fixtures_root) { RCoreMidi::AppPathname.new(File.join('spec', 'fixtures')) }
+RSpec.describe Archaeopteryx::Application do
+  let(:fixtures_root) { Archaeopteryx::AppPathname.new(File.join('spec', 'fixtures')) }
 
   describe '.load_clips!' do
     before { allow(described_class).to receive(:root).and_return(fixtures_root) }
@@ -11,7 +11,7 @@ RSpec.describe RCoreMidi::Application do
     it 'registers the clips found in the clips directory' do
       described_class.load_clips!
 
-      expect(RCoreMidi::Clip[:drum]).to be_an_instance_of(RCoreMidi::Clip)
+      expect(Archaeopteryx::Clip[:drum]).to be_an_instance_of(Archaeopteryx::Clip)
     end
   end
 
@@ -24,16 +24,16 @@ RSpec.describe RCoreMidi::Application do
     it 'registers the instruments found in the instruments directory' do
       described_class.load_instruments!
 
-      expect(RCoreMidi::Instrument[:drum]).to be_an_instance_of(RCoreMidi::Instrument)
+      expect(Archaeopteryx::Instrument[:drum]).to be_an_instance_of(Archaeopteryx::Instrument)
     end
   end
 
   describe '#run' do
-    let(:client) { spy(RCoreMidi::Client) }
+    let(:client) { spy(Archaeopteryx::Client) }
 
     around do |example|
       Dir.mktmpdir do |dir|
-        @app_root = RCoreMidi::AppPathname.new(dir)
+        @app_root = Archaeopteryx::AppPathname.new(dir)
         @app_root.pid_dir.mkpath
         @app_root.log_file.dirname.mkpath
         example.run

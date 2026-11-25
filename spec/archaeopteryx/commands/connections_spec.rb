@@ -1,7 +1,7 @@
 require 'spec_helper'
-require 'rcoremidi/cli'
+require 'archaeopteryx/cli'
 
-RSpec.describe RCoreMidi::Commands::Connections do
+RSpec.describe Archaeopteryx::Commands::Connections do
   let(:source) { double(RCoreMidi::Source, uid: 111) }
   let(:destination) { double(RCoreMidi::Destination, uid: 222) }
   let(:entity) { double(RCoreMidi::Entity, name: 'Bus 1', sources: [source], destinations: [destination]) }

@@ -1,6 +1,6 @@
-require 'rcoremidi/notifier'
+require 'archaeopteryx/notifier'
 
-module RCoreMidi
+module Archaeopteryx
   class Track
     attr_accessor :channel
 

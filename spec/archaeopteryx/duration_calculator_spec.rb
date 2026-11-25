@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module RCoreMidi
+module Archaeopteryx
   RSpec.describe DurationCalculator do
     let(:bpm) { 60 }
     let(:ppqn) { 960 }

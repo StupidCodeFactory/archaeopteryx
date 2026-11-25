@@ -1,4 +1,4 @@
-module RCoreMidi
+module Archaeopteryx
   module Commands
     class Generate < Thor
       include Thor::Actions
@@ -14,7 +14,7 @@ module RCoreMidi
       long_desc <<-LONG_DESC
 This generators assists you in creating a new clip file
 
-RCoreMidi:Clip defines rythmic and/or melodic patterns.
+Archaeopteryx::Clip defines rythmic and/or melodic patterns.
 They can then be loaded into one or multiple instruments
 LONG_DESC
 

@@ -1,6 +1,6 @@
-require 'rcoremidi/commands/application_helper'
+require 'archaeopteryx/commands/application_helper'
 
-module RCoreMidi
+module Archaeopteryx
   module Commands
     class Connections < Thor::Group
       include ApplicationHelper
@@ -9,7 +9,7 @@ module RCoreMidi
       def display_available_connections
         midi_ins  = [TABLE_HEADER]
         midi_outs = [TABLE_HEADER]
-        Device.all.each do |device|
+        RCoreMidi::Device.all.each do |device|
           if device.entities_with_midi_in.any?
             device.entities_with_midi_in.each do |entity|
               entity.sources.each do |source|

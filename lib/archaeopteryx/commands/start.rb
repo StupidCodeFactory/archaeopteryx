@@ -1,5 +1,4 @@
-require 'debug'
-module RCoreMidi
+module Archaeopteryx
   module Commands
     class Start < Thor::Group
       include ApplicationHelper

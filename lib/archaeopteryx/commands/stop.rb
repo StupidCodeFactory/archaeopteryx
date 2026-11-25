@@ -1,9 +1,9 @@
-module RCoreMidi
+module Archaeopteryx
   module Commands
     class Stop < Thor::Group
 
       def application
-        @application || RCoreMidi::Application.new(Dir.pwd)
+        @application || Archaeopteryx::Application.new(Dir.pwd)
       end
 
       def stop

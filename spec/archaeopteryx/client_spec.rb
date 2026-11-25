@@ -1,11 +1,11 @@
 require 'spec_helper'
 
-RSpec.describe RCoreMidi::Client do
+RSpec.describe Archaeopteryx::Client do
   subject(:client) { described_class.new('ruby_client') }
 
-  let(:live) { instance_double(RCoreMidi::Live) }
+  let(:live) { instance_double(Archaeopteryx::Live) }
   let(:midi_out) { instance_double(RCoreMidi::Destination) }
-  let(:configured_tick_nanoseconds) { 60_000_000_000.0 / (RCoreMidi::Application.config.bpm * 24) }
+  let(:configured_tick_nanoseconds) { 60_000_000_000.0 / (Archaeopteryx::Application.config.bpm * 24) }
   let(:downbeat) { note_at(38, on_tick: 0, off_tick: 6) }
   let(:second_beat) { note_at(37, on_tick: 24, off_tick: 30) }
   let(:start_time) { 1_000_000_000 }
@@ -22,8 +22,8 @@ RSpec.describe RCoreMidi::Client do
   after { client.dispose }
 
   def note_at(pitch, on_tick:, off_tick:)
-    described_class::ScheduledNote.new([0x90, pitch, 90], (on_tick * configured_tick_nanoseconds).round,
-                                       [0x80, pitch, 0], (off_tick * configured_tick_nanoseconds).round)
+    RCoreMidi::Client::TimedNote.new([0x90, pitch, 90], (on_tick * configured_tick_nanoseconds).round,
+                                     [0x80, pitch, 0], (off_tick * configured_tick_nanoseconds).round)
   end
 
   def host_time_of(tick)
@@ -39,7 +39,7 @@ RSpec.describe RCoreMidi::Client do
   end
 
   def second_beat_sent_three_ticks_ahead
-    described_class::ScheduledNote.new(second_beat.on, clock_ticks(3), second_beat.off, clock_ticks(9))
+    RCoreMidi::Client::TimedNote.new(second_beat.on, clock_ticks(3), second_beat.off, clock_ticks(9))
   end
 
   describe '#on_start' do
@@ -176,8 +176,8 @@ RSpec.describe RCoreMidi::Client do
     end
 
     it 'times notes only from full clock intervals' do
-      expect(sent).to eq([[[described_class::ScheduledNote.new(second_beat.on, clock_ticks(1), second_beat.off,
-                                                                clock_ticks(7))], resumed_host_time_of(23)]])
+      expect(sent).to eq([[[RCoreMidi::Client::TimedNote.new(second_beat.on, clock_ticks(1), second_beat.off,
+                                                             clock_ticks(7))], resumed_host_time_of(23)]])
     end
   end
 

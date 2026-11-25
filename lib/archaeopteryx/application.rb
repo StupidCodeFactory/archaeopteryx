@@ -1,11 +1,10 @@
 require 'yaml'
-require 'rcoremidi/app_pathname'
-require 'rcoremidi/client'
+require 'archaeopteryx/app_pathname'
+require 'archaeopteryx/client'
 require 'logger'
 require 'listen'
-require 'debug'
 
-module RCoreMidi
+module Archaeopteryx
   class Configuration
     attr_accessor :bpm, :logger
 
@@ -156,19 +155,19 @@ module RCoreMidi
     end
 
     def client
-      @client ||= RCoreMidi::Client.new(connection[:name]).tap do |_c|
+      @client ||= Archaeopteryx::Client.new(connection[:name]).tap do |_c|
         puts "Client name: #{connection[:name]}"
       end
     end
 
     def midi_in
-      @midi_in ||= MIDIObject.find_by_unique_id(connection[:midi_in]).tap do |_c|
+      @midi_in ||= RCoreMidi::MIDIObject.find_by_unique_id(connection[:midi_in]).tap do |_c|
         puts "MIDI IN: #{connection[:midi_in]}"
       end
     end
 
     def midi_out
-      @midi_out ||= MIDIObject.find_by_unique_id(connection[:midi_out]).tap do |_c|
+      @midi_out ||= RCoreMidi::MIDIObject.find_by_unique_id(connection[:midi_out]).tap do |_c|
         puts "MIDI OUT: #{connection[:midi_out]}"
       end
     end

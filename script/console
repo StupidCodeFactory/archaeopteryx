@@ -1,21 +1,21 @@
 #!/usr/bin/env ruby
+# Starts a live session on the IAC Driver bus with the clips and instruments
+# in script/, then drops into IRB with `client` and `live` in scope.
 require 'irb'
-# require 'irb/rubinius'
+require 'bundler/setup'
+require 'archaeopteryx'
 
-require "bundler/setup"
-require 'ap'
-Bundler.setup :default
+entity = RCoreMidi::Device.all.detect { |device| device.name == 'IAC Driver' }.entities.first
 
-require 'rcoremidi'
+Archaeopteryx::Application.config.bpm = 180
+Dir[File.join(__dir__, 'clips', '*.rb')].each { |clip| load clip }
+Dir[File.join(__dir__, 'instruments', '*.rb')].each { |instrument| load instrument }
 
-device = RCoreMidi::Device.all[2]
-entity = device.entities.first
+client = Archaeopteryx::Client.new('Archaeopteryx console')
+client.midi_in = entity.sources.first
+client.midi_out = entity.destinations.first
+client.create_live
+live = client.live
 
-destination = entity.endpoints.detect { |e| e.is_a? RCoreMidi::Destination }
-source      = entity.endpoints.detect { |e| e.is_a? RCoreMidi::Source }
-
-client = RCoreMidi::Client.new("Bob")
-
-client.live source, destination, 180, 'script/clips', 'script/instruments'
-
-client.start
+Thread.new { client.start }
+binding.irb

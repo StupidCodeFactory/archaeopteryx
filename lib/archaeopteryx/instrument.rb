@@ -1,9 +1,8 @@
-require 'rcoremidi/track'
+require 'archaeopteryx/track'
 require 'observer'
-require 'debug'
-module RCoreMidi
+module Archaeopteryx
   class Instrument
-    include RCoreMidi::Registrable
+    include Archaeopteryx::Registrable
 
     attr_reader :name
 
@@ -18,7 +17,7 @@ module RCoreMidi
     end
 
     def log(msg)
-      RCoreMidi::Application.config.logger.info msg
+      Archaeopteryx::Application.config.logger.info msg
     end
 
     def play(bar, clip_name, enable_probability = false)

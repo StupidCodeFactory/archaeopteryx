@@ -1,6 +1,6 @@
-require 'rcoremidi/commands/application_helper'
+require 'archaeopteryx/commands/application_helper'
 
-module RCoreMidi
+module Archaeopteryx
   module Commands
     class New < Thor::Group
       include Thor::Actions
@@ -23,7 +23,7 @@ module RCoreMidi
       def create_dirs
         self.destination_root = "#{name}"
         in_root do
-          RCoreMidi::CLI::DIRS.each do |dir|
+          Archaeopteryx::CLI::DIRS.each do |dir|
             empty_directory dir
           end
         end
@@ -63,7 +63,7 @@ module RCoreMidi
       attr_accessor :application_name
 
       def devices
-        @devices ||= Device.all
+        @devices ||= RCoreMidi::Device.all
       end
 
       def iac_driver
@@ -75,11 +75,11 @@ module RCoreMidi
       end
 
       def midi_in
-        iac_driver_bus_one.endpoints.detect { |entity| entity.is_a?(Source) }
+        iac_driver_bus_one.endpoints.detect { |entity| entity.is_a?(RCoreMidi::Source) }
       end
 
       def midi_out
-        iac_driver_bus_one.endpoints.detect { |entity| entity.is_a?(Destination) }
+        iac_driver_bus_one.endpoints.detect { |entity| entity.is_a?(RCoreMidi::Destination) }
       end
 
       def midi_channel

@@ -1,8 +1,8 @@
 require 'spec_helper'
-require 'rcoremidi/cli'
+require 'archaeopteryx/cli'
 require 'tmpdir'
 
-RSpec.describe RCoreMidi::CLI do
+RSpec.describe Archaeopteryx::CLI, :coremidi do
   around do |example|
     Dir.mktmpdir { |dir| Dir.chdir(dir) { example.run } }
   end
@@ -11,7 +11,7 @@ RSpec.describe RCoreMidi::CLI do
     it 'generates a new application' do
       expect { described_class.start(%w[new dummy]) }.to output.to_stdout
 
-      expect(File).to be_file(File.join('dummy', 'config', RCoreMidi::Commands::New::APPLICATION))
+      expect(File).to be_file(File.join('dummy', 'config', Archaeopteryx::Commands::New::APPLICATION))
     end
   end
 end

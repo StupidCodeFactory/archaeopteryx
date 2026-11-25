@@ -1,6 +1,6 @@
-require 'rcoremidi/probability_generator'
+require 'archaeopteryx/probability_generator'
 
-module RCoreMidi
+module Archaeopteryx
   class RythmSequence
     attr_reader :pitches, :probabilities
 
@@ -32,7 +32,7 @@ module RCoreMidi
     end
 
     def duration_calculator
-      @duration_calculator ||= DurationCalculator.new(RCoreMidi::Application.config.bpm)
+      @duration_calculator ||= DurationCalculator.new(Archaeopteryx::Application.config.bpm)
     end
   end
 end

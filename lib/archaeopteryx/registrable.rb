@@ -1,4 +1,4 @@
-module RCoreMidi
+module Archaeopteryx
   module Registrable
 
     def self.included(klass)
@@ -22,7 +22,7 @@ module RCoreMidi
     end
 
     def load
-      RCoreMidi::Application.config.logger.warn("Default Registrable method called. #{self.class} does implement #load")
+      Archaeopteryx::Application.config.logger.warn("Default Registrable method called. #{self.class} does implement #load")
     end
   end
 end

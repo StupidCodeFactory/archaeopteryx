@@ -1,11 +1,11 @@
 require 'observer'
 require 'musicalism'
-require 'rcoremidi/notifier'
+require 'archaeopteryx/notifier'
 
-module RCoreMidi
+module Archaeopteryx
   class Clip
     include Observable
-    include RCoreMidi::Registrable
+    include Archaeopteryx::Registrable
 
     CHORD_ON_FIRST_STEP = ([1] + [0] * 15).freeze
     MISSING_KEY_MESSAGE = "set the clip key first, e.g. key 'C major'".freeze
@@ -85,7 +85,7 @@ module RCoreMidi
     end
 
     def log(msg)
-      RCoreMidi::Application.config.logger.info msg
+      Archaeopteryx::Application.config.logger.info msg
     end
   end
 end

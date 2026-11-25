@@ -1,6 +1,6 @@
-require 'rcoremidi/duration_calculator'
+require 'archaeopteryx/duration_calculator'
 
-module RCoreMidi
+module Archaeopteryx
   class Live
     attr_reader :instruments
 

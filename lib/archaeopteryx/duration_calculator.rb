@@ -1,4 +1,4 @@
-module RCoreMidi
+module Archaeopteryx
   class DurationCalculator
 
     # 960 ppqn is logic pro's default

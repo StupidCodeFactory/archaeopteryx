@@ -1,4 +1,4 @@
-module RCoreMidi
+module Archaeopteryx
 
   class ProbabilityGenerator
 

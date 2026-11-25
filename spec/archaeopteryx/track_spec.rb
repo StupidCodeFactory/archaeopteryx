@@ -1,13 +1,13 @@
 require 'spec_helper'
 
-RSpec.describe RCoreMidi::Track do
+RSpec.describe Archaeopteryx::Track do
 
   subject { described_class.new(0) }
 
-  let(:duration_calculator) { RCoreMidi::DurationCalculator.new(120) }
+  let(:duration_calculator) { Archaeopteryx::DurationCalculator.new(120) }
 
   def clip_with(&definition)
-    RCoreMidi::Clip.new(:clip_name).tap { |clip| clip.load(&definition) }
+    Archaeopteryx::Clip.new(:clip_name).tap { |clip| clip.load(&definition) }
   end
 
   describe '#generate' do
@@ -17,10 +17,10 @@ RSpec.describe RCoreMidi::Track do
 
         expect(subject.generate(1)).to eq(
           [
-            RCoreMidi::Note.new('E5', *duration_calculator.timestamps_for(0)),
-            RCoreMidi::Note.new('E5', *duration_calculator.timestamps_for(4)),
-            RCoreMidi::Note.new('E5', *duration_calculator.timestamps_for(8)),
-            RCoreMidi::Note.new('E5', *duration_calculator.timestamps_for(12)),
+            Archaeopteryx::Note.new('E5', *duration_calculator.timestamps_for(0)),
+            Archaeopteryx::Note.new('E5', *duration_calculator.timestamps_for(4)),
+            Archaeopteryx::Note.new('E5', *duration_calculator.timestamps_for(8)),
+            Archaeopteryx::Note.new('E5', *duration_calculator.timestamps_for(12)),
           ]
         )
       end

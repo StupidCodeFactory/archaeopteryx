@@ -1,10 +1,10 @@
 require 'spec_helper'
 
-RSpec.describe RCoreMidi::RythmSequence do
+RSpec.describe Archaeopteryx::RythmSequence do
 
   let(:pitch)               { 'E4' }
   let(:probabilities)       { [1, 0, 0, 0] * 4 }
-  let(:duration_calculator) { double(RCoreMidi::DurationCalculator) }
+  let(:duration_calculator) { double(Archaeopteryx::DurationCalculator) }
   let(:channel)             { 0 }
   let(:beat_resolution)     { 16 }
 
@@ -33,8 +33,8 @@ RSpec.describe RCoreMidi::RythmSequence do
   end
 
   describe '#generate' do
-    let(:random_generator)     { double(RCoreMidi::ProbabilityGenerator) }
-    let(:not_random_generator) { double(RCoreMidi::ProbabilityGenerator) }
+    let(:random_generator)     { double(Archaeopteryx::ProbabilityGenerator) }
+    let(:not_random_generator) { double(Archaeopteryx::ProbabilityGenerator) }
     let(:probability_generator) do
       { true => random_generator, false => not_random_generator }
     end

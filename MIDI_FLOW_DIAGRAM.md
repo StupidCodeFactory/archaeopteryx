@@ -1,6 +1,6 @@
 # MIDI Message Flow
 
-How MIDI clock reaches Ruby, and how notes go back out, in the C extension (`ext/rcoremidi/client.c`) and `RCoreMidi::Client` (`lib/rcoremidi/client.rb`).
+How MIDI clock reaches Ruby, and how notes go back out. The C extension and the `RCoreMidi::Client` base class live in the [rcoremidi](https://github.com/StupidCodeFactory/rcoremidi) gem (`ext/rcoremidi/client.c`); the scheduling is `Archaeopteryx::Client` (`lib/archaeopteryx/client.rb`), a subclass that overrides the clock hooks.
 
 ```
  MIDI master (DAW, drum machine)
@@ -22,7 +22,7 @@ How MIDI clock reaches Ruby, and how notes go back out, in the C extension (`ext
               │     on_stop / on_continue   (only if defined)
               │  then runs pending interrupts (traps, Ctrl-C, Thread#kill)
               ▼
- RCoreMidi::Client
+ Archaeopteryx::Client  (subclass of RCoreMidi::Client)
               │  measures the tick period from the clock host times
               │  (forgotten on Stop, so a tempo change while stopped
               │  is picked up from the first clocks after Continue)

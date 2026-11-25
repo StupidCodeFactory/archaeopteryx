@@ -1,6 +1,6 @@
 require 'musicalism'
 
-module RCoreMidi
+module Archaeopteryx
   class Note
     attr_accessor :note, :velocity, :channel, :status_byte, :on_timestamp, :off_timestamp
     private :note=, :velocity=, :channel=, :status_byte=, :on_timestamp=

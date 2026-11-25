@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-module RCoreMidi
+module Archaeopteryx
   RSpec.describe Note do
     let(:note) { Note.new('C3', 0, 0, 1) }
 

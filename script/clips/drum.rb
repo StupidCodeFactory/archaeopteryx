@@ -1,4 +1,4 @@
-RCoreMidi::Clip.register :drum  do
+Archaeopteryx::Clip.register :drum  do
   note 'C4',  [
     0.85, 0.0, 0.0, 0.0,
     0.0, 0.0, 0.0, 0.0,

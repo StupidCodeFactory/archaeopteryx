@@ -2,7 +2,7 @@
 
 require 'bundler'
 require 'bundler/setup'
-require 'rcoremidi/cli'
+require 'archaeopteryx/cli'
 
 APP_PATH = File.join(File.expand_path(File.join(__dir__, '..')))
-RCoreMidi::CLI.start(ARGV)
+Archaeopteryx::CLI.start(ARGV)

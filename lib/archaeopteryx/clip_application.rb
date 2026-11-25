@@ -1,5 +1,5 @@
 require 'application'
-module RCoreMidi
+module Archaeopteryx
   class ClipApplication < Application
     def run
     end

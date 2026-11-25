@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-RSpec.describe RCoreMidi::Clip do
+RSpec.describe Archaeopteryx::Clip do
 
   let(:definition) do
     Proc.new do
@@ -17,13 +17,13 @@ RSpec.describe RCoreMidi::Clip do
   end
 
   describe '#note' do
-    let(:rythm_sequence) { instance_double(RCoreMidi::RythmSequence) }
+    let(:rythm_sequence) { instance_double(Archaeopteryx::RythmSequence) }
     let(:pitch)          { 'E5' }
     let(:notes)          { [1,0,0,0] * 4 }
     let(:beat_resolution) { 16 }
 
     it 'parses RythmSequence' do
-      expect(RCoreMidi::RythmSequence).to receive(:new).with(pitch, beat_resolution, notes).and_return(rythm_sequence)
+      expect(Archaeopteryx::RythmSequence).to receive(:new).with(pitch, beat_resolution, notes).and_return(rythm_sequence)
       subject.note(pitch, beat_resolution, notes)
 
       expect(subject.rythm_sequences).to eq([rythm_sequence])

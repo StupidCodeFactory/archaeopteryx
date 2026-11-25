@@ -1,8 +1,8 @@
-require 'rcoremidi'
-require 'rcoremidi/commands'
+require 'archaeopteryx'
+require 'archaeopteryx/commands'
 require 'yaml'
 
-module RCoreMidi
+module Archaeopteryx
   class CLI < Thor
     include Thor::Actions
 

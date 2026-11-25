@@ -1,6 +1,6 @@
 # Clock lab
 
-Checks that notes sent by `RCoreMidi::Client` land on the MIDI clock that drives them. Everything goes through IAC Driver Bus 1: the clock master sends clock there, the test app (`clock_check`) listens to it and plays back to it, and `midi_monitor` records every message with its timestamp.
+Checks that notes sent by `Archaeopteryx::Client` land on the MIDI clock that drives them. Everything goes through IAC Driver Bus 1: the clock master sends clock there, the test app (`clock_check`) listens to it and plays back to it, and `midi_monitor` records every message with its timestamp.
 
 The test app plays a kick (note 37) on every beat and adds a snare (note 38) on each downbeat. In Ultrabeat, those are the Kick and Snare voices.
 

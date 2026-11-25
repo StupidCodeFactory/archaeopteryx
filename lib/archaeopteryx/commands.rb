@@ -1,12 +1,12 @@
 require 'thor'
-require 'rcoremidi/commands/generate'
-require 'rcoremidi/commands/new'
-require 'rcoremidi/commands/connections'
-require 'rcoremidi/commands/start'
-require 'rcoremidi/commands/stop'
-require 'rcoremidi/commands/status'
+require 'archaeopteryx/commands/generate'
+require 'archaeopteryx/commands/new'
+require 'archaeopteryx/commands/connections'
+require 'archaeopteryx/commands/start'
+require 'archaeopteryx/commands/stop'
+require 'archaeopteryx/commands/status'
 
-module RCoreMidi
+module Archaeopteryx
   module Commands
   end
 end

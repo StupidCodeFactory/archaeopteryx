@@ -1,4 +1,4 @@
-module Rcoremidi
+module Archaeopteryx
   module Daemonize
 
     def daemonize
