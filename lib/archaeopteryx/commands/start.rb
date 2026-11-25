@@ -1,0 +1,13 @@
+module Archaeopteryx
+  module Commands
+    class Start < Thor::Group
+      include ApplicationHelper
+
+      class_option :daemon, type: :boolean, default: false, aliases: %w[-d], banner: 'Start process in the background'
+      def start
+        application.run(daemon_mode: options[:daemon])
+        exit(0)
+      end
+    end
+  end
+end
