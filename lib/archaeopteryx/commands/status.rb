@@ -3,7 +3,7 @@ module Archaeopteryx
     class Status < Thor::Group
 
       def application
-        @application || Archaeopteryx::Application.new(Dir.pwd)
+        @application || Archaeopteryx::Application.new
       end
 
       def log_application_status
