@@ -13,7 +13,7 @@ timestamped notes. Archaeopteryx decides which notes to play and when.
 ## Requirements
 
 - macOS. rcoremidi wraps CoreMIDI, so it does not build anywhere else.
-- Ruby 3.1 or later.
+- Ruby 3.2 or later.
 - A MIDI clock source and a synth listening on a MIDI port. The IAC Driver
   (Audio MIDI Setup > MIDI Studio > IAC Driver > "Device is online") gives
   you a virtual bus between Archaeopteryx and your DAW.

@@ -17,7 +17,7 @@ Gem::Specification.new do |s|
     CoreMIDI through the rcoremidi gem.
   DESC
 
-  s.required_ruby_version = '>= 3.1'
+  s.required_ruby_version = '>= 3.2'
   s.files = Dir['lib/**/*', 'bin/arcx', 'README.md', 'LICENSE', 'MIDI_FLOW_DIAGRAM.md']
   s.bindir = 'bin'
   s.executables = ['arcx']
