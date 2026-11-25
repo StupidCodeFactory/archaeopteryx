@@ -11,19 +11,28 @@ RSpec.describe Archaeopteryx::Client do
   let(:start_time) { 1_000_000_000 }
   let(:tick_period) { RCoreMidi::HostTime.from_nanoseconds(configured_tick_nanoseconds) }
   let(:sent) { [] }
+  let(:destinations) { [] }
 
   before do
     client.midi_out = midi_out
     allow(client).to receive(:live).and_return(live)
     allow(live).to receive(:generate_beats).and_return([downbeat, second_beat])
-    allow(client).to receive(:send_packets) { |_destination, notes, host_time| sent << [notes, host_time] }
+    allow(client).to receive(:send_packets) { |destination, notes, host_time| sent << [notes, host_time]; destinations << destination }
   end
 
   after { client.dispose }
 
+  # What Live generates: Archaeopteryx::Note answers these, plus the instrument's destination.
+  GeneratedNote = Struct.new(:on, :on_timestamp, :off, :off_timestamp, :destination)
+
+  # What send_packets receives for a generated note.
+  def timed(note)
+    RCoreMidi::Client::TimedNote.new(note.on, note.on_timestamp, note.off, note.off_timestamp)
+  end
+
   def note_at(pitch, on_tick:, off_tick:)
-    RCoreMidi::Client::TimedNote.new([0x90, pitch, 90], (on_tick * configured_tick_nanoseconds).round,
-                                     [0x80, pitch, 0], (off_tick * configured_tick_nanoseconds).round)
+    GeneratedNote.new([0x90, pitch, 90], (on_tick * configured_tick_nanoseconds).round,
+                      [0x80, pitch, 0], (off_tick * configured_tick_nanoseconds).round)
   end
 
   def host_time_of(tick)
@@ -66,7 +75,7 @@ RSpec.describe Archaeopteryx::Client do
       it 'plays the downbeat on the first clock after start' do
         play_ticks([0])
 
-        expect(sent).to eq([[[downbeat], host_time_of(0)]])
+        expect(sent).to eq([[[timed(downbeat)], host_time_of(0)]])
       end
 
       it 'sends each note a few clock ticks ahead, timed from the latest clock' do
@@ -78,7 +87,7 @@ RSpec.describe Archaeopteryx::Client do
       it 'does not send a note before its lookahead' do
         play_ticks(0..20)
 
-        expect(sent).to eq([[[downbeat], host_time_of(0)]])
+        expect(sent).to eq([[[timed(downbeat)], host_time_of(0)]])
       end
 
       it 'prepares the next bar one beat ahead' do
@@ -113,6 +122,43 @@ RSpec.describe Archaeopteryx::Client do
     end
   end
 
+  describe 'notes for several outputs' do
+    let(:modular) { instance_double(RCoreMidi::Destination) }
+    let(:modular_downbeat) { note_at(60, on_tick: 0, off_tick: 3).tap { |note| note.destination = modular } }
+
+    before do
+      allow(live).to receive(:generate_beats).and_return([downbeat, modular_downbeat])
+      client.on_start(start_time)
+      play_ticks([0])
+    end
+
+    it 'sends each note to its own output, and the others to midi_out' do
+      expect(destinations).to contain_exactly(midi_out, modular)
+      expect(sent).to contain_exactly([[timed(downbeat)], host_time_of(0)], [[have_attributes(on: modular_downbeat.on)], host_time_of(0)])
+    end
+  end
+
+  describe 'moving the song position while playing' do
+    before do
+      client.on_start(start_time)
+      play_ticks(0..80)
+      sent.clear
+    end
+
+    it 'plays from the new position when jumping forward' do
+      play_ticks(400..405)
+
+      expect(live).not_to have_received(:generate_beats).with(bar: 3)
+      expect(sent).to eq([[[second_beat_sent_three_ticks_ahead], host_time_of(405)]])
+    end
+
+    it 'plays from the new position when jumping back' do
+      play_ticks(16..21)
+
+      expect(sent).to eq([[[second_beat_sent_three_ticks_ahead], host_time_of(21)]])
+    end
+  end
+
   describe '#on_continue' do
     before do
       client.on_start(start_time)
@@ -133,7 +179,7 @@ RSpec.describe Archaeopteryx::Client do
       play_ticks([480])
 
       expect(live).to have_received(:generate_beats).with(bar: 6)
-      expect(sent).to eq([[[downbeat], host_time_of(480)]])
+      expect(sent).to eq([[[timed(downbeat)], host_time_of(480)]])
     end
   end
 

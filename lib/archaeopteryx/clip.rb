@@ -23,13 +23,13 @@ module Archaeopteryx
       @key = Musicalism::Key.coerce(name)
     end
 
-    def note(pitch_or_degree, beat_resolution, probabilities)
-      rythm_sequences << RythmSequence.new(pitch_name(pitch_or_degree), beat_resolution, probabilities)
+    def note(pitch_or_degree, beat_resolution, probabilities, velocity: nil)
+      rythm_sequences << RythmSequence.new(pitch_name(pitch_or_degree), beat_resolution, probabilities, velocity)
     end
 
-    def chord(chord_or_numeral, beat_resolution, probabilities, inversion: 0)
+    def chord(chord_or_numeral, beat_resolution, probabilities, inversion: 0, velocity: nil)
       chord = musicalism_chord(chord_or_numeral, inversion)
-      rythm_sequences << RythmSequence.new(pitch_names(chord), beat_resolution, probabilities)
+      rythm_sequences << RythmSequence.new(pitch_names(chord), beat_resolution, probabilities, velocity)
     end
 
     def modulate(to:, via: nil, beat_resolution: 16, rhythm: CHORD_ON_FIRST_STEP, voice_leading: true)
@@ -38,10 +38,13 @@ module Archaeopteryx
       end
     end
 
-    def rythm_sequences_for(bar_offset)
-      return rythm_sequences if bars.empty?
+    def follow(journey_name, &block)
+      self.followed_journey = [journey_name, block]
+    end
 
-      rythm_sequences + bars[bar_offset % bars.size]
+    def rythm_sequences_for(bar_offset, song_bar = nil)
+      fixed_sequences = bars.empty? ? rythm_sequences : rythm_sequences + bars[bar_offset % bars.size]
+      fixed_sequences + journey_sequences_for(song_bar)
     end
 
     def load(&block)
@@ -53,13 +56,38 @@ module Archaeopteryx
 
     private
 
-    attr_accessor :generator, :block, :bars
+    attr_accessor :generator, :block, :bars, :followed_journey
     attr_writer :rythm_sequences, :name, :notifier
 
     def forget_definition
       self.rythm_sequences = []
       self.bars = []
+      self.followed_journey = nil
       @key = nil
+    end
+
+    def journey_sequences_for(song_bar)
+      return [] unless followed_journey && song_bar
+
+      journey_name, block = followed_journey
+      bar = journey(journey_name).bar(song_bar)
+      sequences_played_in(bar.key) { instance_exec(bar.key, bar, &block) }
+    end
+
+    def sequences_played_in(journey_key)
+      fixed_sequences = rythm_sequences
+      fixed_key = @key
+      self.rythm_sequences = []
+      @key = journey_key
+      yield
+      rythm_sequences
+    ensure
+      self.rythm_sequences = fixed_sequences
+      @key = fixed_key
+    end
+
+    def journey(name)
+      Journey[name] || raise(ArgumentError, "Journey #{name} not found.")
     end
 
     def current_key

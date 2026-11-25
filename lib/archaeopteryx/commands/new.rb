@@ -13,6 +13,7 @@ module Archaeopteryx
       LIVE        = 'live.rb'.freeze
       CLIP        = 'clip.rb'
       INSTRUMENT  = 'instrument.rb'
+      GEMFILE     = 'Gemfile'.freeze
 
       def self.source_root
         File.expand_path('templates', File.dirname(__FILE__))
@@ -27,6 +28,10 @@ module Archaeopteryx
             empty_directory dir
           end
         end
+      end
+
+      def create_gemfile
+        template GEMFILE
       end
 
       def create_clip

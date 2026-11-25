@@ -13,7 +13,7 @@ timestamped notes. Archaeopteryx decides which notes to play and when.
 ## Requirements
 
 - macOS. rcoremidi wraps CoreMIDI, so it does not build anywhere else.
-- Ruby 3.1 or later.
+- Ruby 3.2 or later.
 - A MIDI clock source and a synth listening on a MIDI port. The IAC Driver
   (Audio MIDI Setup > MIDI Studio > IAC Driver > "Device is online") gives
   you a virtual bus between Archaeopteryx and your DAW.
@@ -24,14 +24,10 @@ timestamped notes. Archaeopteryx decides which notes to play and when.
 gem install archaeopteryx
 ```
 
-Clip keys and chords use [musicalism](https://github.com/StupidCodeFactory/musicalism),
-which is not on rubygems.org yet. Add it to your application's Gemfile from git
-or a local checkout:
-
-```ruby
-gem 'archaeopteryx'
-gem 'musicalism', github: 'StupidCodeFactory/musicalism'
-```
+This also installs rcoremidi (the CoreMIDI driver) and
+[musicalism](https://github.com/StupidCodeFactory/musicalism) (keys and chords).
+`arcx new` writes a Gemfile for the generated set, so `bundle install` inside it
+is enough.
 
 To work on Archaeopteryx itself, check out `rcoremidi` and `musicalism` next to
 this repository, or set `RCOREMIDI_PATH` and `MUSICALISM_PATH`. Then compile
@@ -47,7 +43,7 @@ bundle exec rake spec
 
 ```bash
 arcx new my_set        # app skeleton; MIDI in/out default to IAC Driver Bus 1
-cd my_set
+cd my_set && bundle install
 arcx connections       # list MIDI inputs and outputs with their unique IDs
 arcx generate clip drum
 arcx start             # wait for the clock (add -d to run in the background)

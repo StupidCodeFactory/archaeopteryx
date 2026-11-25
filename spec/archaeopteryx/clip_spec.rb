@@ -23,10 +23,16 @@ RSpec.describe Archaeopteryx::Clip do
     let(:beat_resolution) { 16 }
 
     it 'parses RythmSequence' do
-      expect(Archaeopteryx::RythmSequence).to receive(:new).with(pitch, beat_resolution, notes).and_return(rythm_sequence)
+      expect(Archaeopteryx::RythmSequence).to receive(:new).with(pitch, beat_resolution, notes, nil).and_return(rythm_sequence)
       subject.note(pitch, beat_resolution, notes)
 
       expect(subject.rythm_sequences).to eq([rythm_sequence])
+    end
+
+    it 'plays each step at the velocity of its lane' do
+      clip = clip_with { note 'C4', 16, [1, 1, 1, 1], velocity: [127, 0, 60, 90] }
+
+      expect(clip.rythm_sequences.first.generate(false, 0).map { |note| note.on[2] }).to eq([127, 0, 60, 90])
     end
 
     it 'plays a scale degree of the clip key' do
@@ -82,6 +88,97 @@ RSpec.describe Archaeopteryx::Clip do
       end
 
       expect(clip.rythm_sequences.map(&:pitches)).to eq([%w[E5 G#5 B5]])
+    end
+  end
+
+  describe '#follow' do
+    let(:journey_name) { :"voyage_#{SecureRandom.hex(4)}" }
+
+    before do
+      Archaeopteryx::Journey.register(journey_name, from: 'C major', mode: :up, range: 2, rate: 4, seed: 3)
+    end
+
+    def journey_bar(bar)
+      Archaeopteryx::Journey[journey_name].bar(bar)
+    end
+
+    it 'plays in the key of the journey on each bar' do
+      name = journey_name
+      clip = clip_with do
+        follow(name) { |key, _step| chord key.chord(:I), 16, [1] }
+      end
+
+      expect([1, 5, 9].map { |bar| clip.rythm_sequences_for(0, bar).map(&:pitches) })
+        .to eq([1, 5, 9].map { |bar| [journey_bar(bar).key.chord(:I).notes.map { |note| "#{note.pitch}#{note.octave}" }] })
+    end
+
+    it 'resolves scale degrees and numerals in the journey key' do
+      name = journey_name
+      clip = clip_with do
+        follow(name) do |_key, _step|
+          note 1, 16, [1]
+          chord :V, 16, [1]
+        end
+      end
+      key = journey_bar(5).key
+
+      expect(clip.rythm_sequences_for(0, 5).map(&:pitches))
+        .to eq([["#{key.note(1).pitch}#{key.note(1).octave}"], key.chord(:V).notes.map { |note| "#{note.pitch}#{note.octave}" }])
+    end
+
+    it 'gives the bar of the journey to the block' do
+      name = journey_name
+      seen = []
+      clip = clip_with { follow(name) { |_key, step| seen << [step.bar, step.distance] } }
+      (1..5).each { |bar| clip.rythm_sequences_for(0, bar) }
+
+      expect(seen).to eq([[0, 0], [1, 0], [2, 0], [3, 0], [0, 1]])
+    end
+
+    it 'adds the sequences that play on every bar' do
+      name = journey_name
+      clip = clip_with do
+        note 'C#2', 16, [1]
+        follow(name) { |_key, step| note 'D2', 16, [1] if step.first_bar? }
+      end
+
+      expect([1, 2].map { |bar| clip.rythm_sequences_for(0, bar).map(&:pitches) }).to eq([[%w[C#2], %w[D2]], [%w[C#2]]])
+    end
+
+    it 'keeps its own key and sequences outside the journey bars' do
+      name = journey_name
+      clip = clip_with do
+        key 'A minor'
+        note 1, 16, [1]
+        follow(name) { |_key, _step| note 1, 16, [1] }
+      end
+      clip.rythm_sequences_for(0, 5)
+
+      expect([clip.key, clip.rythm_sequences.map(&:pitches)]).to eq([Musicalism::Key['A minor'], [%w[A4]]])
+    end
+
+    it 'plays only its own sequences when no song bar is given' do
+      name = journey_name
+      clip = clip_with do
+        note 'C#2', 16, [1]
+        follow(name) { |_key, _step| note 'D2', 16, [1] }
+      end
+
+      expect(clip.rythm_sequences_for(0).map(&:pitches)).to eq([%w[C#2]])
+    end
+
+    it 'asks for a journey that exists' do
+      clip = clip_with { follow(:nowhere) { |_key, _step| } }
+
+      expect { clip.rythm_sequences_for(0, 1) }.to raise_error(ArgumentError, 'Journey nowhere not found.')
+    end
+
+    it 'stops following when the clip file is reloaded without it' do
+      name = journey_name
+      clip = clip_with { follow(name) { |_key, _step| note 'D2', 16, [1] } }
+      clip.load {}
+
+      expect(clip.rythm_sequences_for(0, 1)).to be_empty
     end
   end
 
