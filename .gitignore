@@ -1,6 +1,6 @@
 *.[o]
 *.bundle
-ext/rcormidi/Makefile
+Gemfile.lock
 tmp*
 .emacs*
 TAGS
