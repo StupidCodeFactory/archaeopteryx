@@ -23,4 +23,9 @@ RSpec.describe Archaeopteryx::Commands::New, :coremidi do
   it 'writes the application class named after the folder' do
     expect(File.read(application_file)).to include('class DummyApp < Archaeopteryx::Application')
   end
+
+  it 'writes a Gemfile that installs archaeopteryx from rubygems' do
+    gemfile = File.read(File.join(application_name, described_class::GEMFILE))
+    expect(gemfile).to include("gem 'archaeopteryx', '~> #{Archaeopteryx::VERSION}'")
+  end
 end

@@ -25,10 +25,10 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'listen'
   s.add_dependency 'logger'
+  s.add_dependency 'musicalism', '>= 0.0.1'
   s.add_dependency 'observer'
   s.add_dependency 'rcoremidi', '~> 0.1'
   s.add_dependency 'thor'
-  # musicalism is not published on rubygems.org yet; the Gemfile provides it.
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'

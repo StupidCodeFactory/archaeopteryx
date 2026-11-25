@@ -24,14 +24,10 @@ timestamped notes. Archaeopteryx decides which notes to play and when.
 gem install archaeopteryx
 ```
 
-Clip keys and chords use [musicalism](https://github.com/StupidCodeFactory/musicalism),
-which is not on rubygems.org yet. Add it to your application's Gemfile from git
-or a local checkout:
-
-```ruby
-gem 'archaeopteryx'
-gem 'musicalism', github: 'StupidCodeFactory/musicalism'
-```
+This also installs rcoremidi (the CoreMIDI driver) and
+[musicalism](https://github.com/StupidCodeFactory/musicalism) (keys and chords).
+`arcx new` writes a Gemfile for the generated set, so `bundle install` inside it
+is enough.
 
 To work on Archaeopteryx itself, check out `rcoremidi` and `musicalism` next to
 this repository, or set `RCOREMIDI_PATH` and `MUSICALISM_PATH`. Then compile
