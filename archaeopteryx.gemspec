@@ -25,7 +25,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'listen'
   s.add_dependency 'logger'
-  s.add_dependency 'musicalism', '>= 0.0.1'
+  s.add_dependency 'musicalism', '~> 0.1'
   s.add_dependency 'observer'
   s.add_dependency 'rcoremidi', '~> 0.1'
   s.add_dependency 'thor'
